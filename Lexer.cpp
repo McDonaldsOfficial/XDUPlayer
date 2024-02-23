@@ -1,4 +1,12 @@
 #include "./Headers/Lexer.h"
+#include <map>
+std::map<char, Token_Kind> map_tokens = {
+    {'=', TOKEN_EQUALS},
+    {'[', TOKEN_OPEN_SQRBRACKET},
+    {']',TOKEN_CLOSE_SQRBRACKET},
+    {':',TOKEN_COLON},
+};
+
 
 Lexer::Lexer(std::string content){
     this->content = content;
@@ -44,6 +52,9 @@ void Lexer::trim_left(){
 bool Lexer::is_eof(){
     return this->cursor >= this->content_len;
 }
+bool map_contains(char c){
+    return map_tokens.find(c) != map_tokens.end();
+}
 
 char Lexer::current_character(){
     return this->content[this->cursor];
@@ -58,13 +69,13 @@ Token Lexer::next(){
     size_t len = 0;
     size_t start = this->cursor;
     if(this->is_eof()) return token;
-    if(this->current_character() == '='){
-        token.kind = TOKEN_EQUALS;
-        token.text = this->content.substr(start,1);        
+    if(map_contains(this->current_character())){
+        token.kind = map_tokens[this->current_character()];
+        token.text = this->content.substr(start,1);
         this->chop_char();
-        // token.text = this->content.substr(this->cursor);
         return token;
     }
+
     if(this->current_character() == '%'){
         token.kind = TOKEN_COMMENT;
         while(!this->is_eof() && this->current_character() !='\n'){
@@ -91,31 +102,30 @@ Token Lexer::next(){
 
     if(is_symbol_start( this->current_character() )){
         
-        while(!this->is_eof() && this->current_character() != ' ' && this->current_character() != '\n'){
+        while(!this->is_eof() && this->current_character() != ' ' && this->is_symbol(this->current_character()) && this->current_character() != '\n'){
             this->chop_char();
             len += 1;
         }  
         
-        token.text = this->content.substr(start,len);
-        // token.text_len = &this->content[this->cursor] - token.text;
+        token.text = this->content.substr(start,len);        
         token.kind = TOKEN_SYMBOL;
         return token;
     }
-    if( this->current_character() == '[' ){
-        token.kind = TOKEN_NAME_CHARA;
+    // if( this->current_character() == '[' ){
+    //     token.kind = TOKEN_NAME_CHARA;
         
-        this->chop_char();
-        while(!this->is_eof() && this->current_character() != ']'){
-            this->chop_char();
-            len += 1;
-        }
-        if(!this->is_eof()){
-            len += 1;
-            this->chop_char();
-        }
-        token.text = this->content.substr(start + 1,len - 1);
-        return token;
-    }
+    //     this->chop_char();
+    //     while(!this->is_eof() && (this->current_character() != ']')){
+    //         this->chop_char();
+    //         len += 1;
+    //     }
+    //     if(!this->is_eof()){
+    //         len += 1;
+    //         this->chop_char();
+    //     }
+    //     token.text = this->content.substr(start + 1,len - 1);
+    //     return token;
+    // }
     if(this->current_character() == '"'){
         token.kind = TOKEN_STRING_LITERAL;
         
@@ -147,6 +157,9 @@ std::string Lexer::token_kind_name(Token_Kind kind){
         case TOKEN_EQUALS: return "token kind equals";
         case TOKEN_COMMENT: return "token kind coment";
         case TOKEN_NUMBER: return "token kind number";
+        case TOKEN_CLOSE_SQRBRACKET: return "token close bracket";
+        case TOKEN_OPEN_SQRBRACKET: return "token open bracket";
+        case TOKEN_COLON: return "token colon";
     }
     return "NULL";
 }

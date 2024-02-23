@@ -45,7 +45,7 @@ struct CharaScreen {
     Vector2 pos;
     Color dest_color;
     Color from_color;
-    Animation_Type animation;
+    Animation_Type animation;    
 };
 
 struct CameraParams {
@@ -74,7 +74,7 @@ class Renderer{
         float next_icon_pos_y;
         Animator animator;        
         std::map<std::string, Character> variable_map;
-        std::map<std::string, CharaScreen> character_on_screen;
+        std::map<std::string, CharaScreen> character_on_screen;        
         Color visible_chara = {.r = 255, .g = 255, .b = 255, .a = 255};
         Color background_chara_color;
         Color invisible_chara = {.r = 255, .g = 255, .b = 255, .a = 0};
@@ -98,9 +98,10 @@ class Renderer{
         void move_camera();
         void remove_character();
         void fade_screen(bool fade_out);
-        void write_dialoge_chara();
+        void write_to_screen();
+        void chara_dialogue();
         void fade_in(std::string key);
-        bool fade_out(std::string key);
+        bool fade_out(std::string key);        
         
         bool are_the_same_color(Color color1, Color color2);
         bool timer_done();
@@ -111,5 +112,6 @@ class Renderer{
         void FadeScreen();        
         Color string_to_color(std::string color);
         Token validate_token(Token_Kind kind, std::string message);
-        std::string prev_character_name_dialogue;        
+        std::string prev_character_name_dialogue;   
+        std::string get_sprite_number(std::string name);     
 };

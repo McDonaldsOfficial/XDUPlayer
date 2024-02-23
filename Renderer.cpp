@@ -29,15 +29,7 @@ Renderer::Renderer(){
     this->cam_param.camera_target = screen_center;
     this->cam_param.zoom = 1;
     this->screen_animations.type = NO_ANIMATION;
-    this->parse_instruction();
-    // for(auto const &[key, val] : this->variable_map){
-    //     std::cout << key
-    //               << ':'
-    //               << val.name
-    //               << '\t'
-    //               << val.path
-    //               << '\n';
-    // }
+    this->parse_instruction();          
 }
 Renderer::~Renderer(){
     UnloadTexture(render.textbar);
@@ -51,6 +43,22 @@ Renderer::~Renderer(){
     }
 }
 
+std::string Renderer::get_sprite_number(std::string name){
+    if (name == "calm") {
+        return "01";
+    } else if (name == "happy") {
+        return "02";
+    } else if (name == "sad") {
+        return "03";
+    } else if (name == "surprised") {
+        return "05";
+    } else if (name == "blush") {
+        return "06";
+    } else if (name == "angry") {
+        return "07";
+    }
+    return "";
+}
 
 Texture2D Renderer::load_texture(std::string path){
     Image image = LoadImage(path.c_str());    
@@ -60,7 +68,7 @@ Texture2D Renderer::load_texture(std::string path){
     return texture;
 }
 
-void Renderer::write_dialoge_chara(){
+void Renderer::write_to_screen(){
     if(this->render.current_name.empty()){
         return;        
     }  
@@ -251,7 +259,7 @@ void Renderer::draw_screen(){
     {
         ofset = -1;
     }
-    this->write_dialoge_chara();
+    this->write_to_screen();
     if(this->screen_animations.type != NO_ANIMATION){
         if(!this->are_the_same_color( this->screen_animations.origin_color, this->screen_animations.dest_color )){
             this->FadeScreen();
@@ -265,7 +273,8 @@ void Renderer::draw_screen(){
 Token Renderer::validate_token(Token_Kind kind, std::string message){
     Token t = this->lexer.next();
     if(t.kind != kind){
-        throw std::invalid_argument(message);
+        std::string improved_message = "Recibido "+this->lexer.token_kind_name(t.kind)+ " Esperado "+ this->lexer.token_kind_name(kind)+ "\n" + message;   
+        throw std::invalid_argument(improved_message);
     }
     return t;
 }   
@@ -298,6 +307,7 @@ void Renderer::add_character(){
     }
     std::string name_var = t.text;
     Character c = this->variable_map[name_var];
+    
     Texture2D texture = load_texture(c.path);
     t = this->validate_token(TOKEN_SYMBOL, "Debe de especificar la dirección del personaje");
     Vector2 pos;
@@ -309,8 +319,7 @@ void Renderer::add_character(){
         pos = (Vector2) {.x = (float)(texture.width / 2), .y = 100};
     }
     
-    //this->character_on_screen[name_var] = (CharaScreen){texture, pos, background_chara_color, FADE_IN};
-    this->character_on_screen[name_var] = (CharaScreen){texture, pos, background_chara_color, invisible_chara, FADE_IN};
+    this->character_on_screen[name_var] = (CharaScreen){texture, pos, background_chara_color, FADE_IN};    
 }
 
 void Renderer::remove_character(){
@@ -401,6 +410,45 @@ void Renderer::wait(){
     this->start_timer(pause_time);
 }
 
+void Renderer::chara_dialogue(){
+    Token t = this->lexer.next();        
+    std::string name = t.text;
+    std::string original_name = name;
+    if(!this->prev_character_name_dialogue.empty()){            
+        this->character_on_screen[this->prev_character_name_dialogue].dest_color = this->background_chara_color;    
+    }
+    if(this->variable_map.find(name) != this->variable_map.end()){        
+        this->prev_character_name_dialogue = t.text;
+        this->character_on_screen[name].dest_color = WHITE;
+        name = this->variable_map[name].name;
+    }else if(t.kind != TOKEN_STRING_LITERAL){
+        throw std::invalid_argument("No existe la variable"); 
+    }
+    
+    //TODO: Si el dialogo es de tipo string y hay 2 puntos, lanzar error
+    t = this->lexer.next();
+    if(t.kind == TOKEN_COLON){
+        t = this->validate_token(TOKEN_SYMBOL, "Deb de especificar la expresión del personaje");
+        std::string path = this->variable_map[original_name].path;
+        path = path.substr(0, path.length() - 6) + this->get_sprite_number(t.text) + ".png";
+        CharaScreen c = this->character_on_screen[ original_name ];
+        //TODO: Maybe add sprite to sprite anim
+        c.animation = NO_ANIMATION;
+        if(c.texture.id > 0) UnloadTexture(c.texture);
+        c.texture = this->load_texture(path);
+        this->character_on_screen[ original_name ] = c;
+        t = this->validate_token(TOKEN_CLOSE_SQRBRACKET, "Debe de cerrar el dialogo");
+    }
+
+    t = this->validate_token(TOKEN_STRING_LITERAL, "El nombre del personaje debe de tener su dialogo");
+    std::string dialogue = t.text;
+    this->render.full_dialog = dialogue;
+    this->render.current_dialog = "";
+    this->render.current_name = name;
+    this->render.dialog_chara_counter = 0;
+    
+}
+
 void Renderer::parse_instruction(){
     if(!this->timer_done()){
         return;
@@ -411,7 +459,7 @@ void Renderer::parse_instruction(){
     if(t.kind == TOKEN_END) return;    
     while(t.kind == TOKEN_COMMENT) t = this->lexer.next();        
 
-    while(t.kind != TOKEN_NAME_CHARA){
+    while(t.kind != TOKEN_OPEN_SQRBRACKET){
         if(t.text.compare("WAIT") == 0){
             this->wait();
             return;
@@ -433,26 +481,8 @@ void Renderer::parse_instruction(){
         
         t = this->lexer.next();
         if(t.kind == TOKEN_END) return; 
-    }    
-    std::string name = t.text;
-    
-    if(this->variable_map.find(name) == this->variable_map.end()){
-        // throw std::invalid_argument("No existe la variable");        
-    }else{        
-        if(!this->prev_character_name_dialogue.empty()){
-            // this->character_on_screen[this->prev_character_name_dialogue].from_color = this->background_chara_color;    
-            this->character_on_screen[this->prev_character_name_dialogue].dest_color = this->background_chara_color;    
-        }
-        this->prev_character_name_dialogue = t.text;
-        this->character_on_screen[name].dest_color = WHITE;
-        name = this->variable_map[name].name;
     }
-    t = this->validate_token(TOKEN_STRING_LITERAL, "El nombre del personaje debe de tener su dialogo");
-    std::string dialogue = t.text;
-    this->render.full_dialog = dialogue;
-    this->render.current_dialog = "";
-    this->render.current_name = name;
-    this->render.dialog_chara_counter = 0;
+    this->chara_dialogue();    
 }
 
 void Renderer::draw_background(){

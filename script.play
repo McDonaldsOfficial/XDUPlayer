@@ -1,3 +1,4 @@
+%Define Characters
 CHARACTER miku = "Kohinata Miku" "Images/sg08_027_02.png"
 CHARACTER shirabe = "Shirabe Tsukuyomi" "Images/sg05_036_01.png"
 
@@ -12,32 +13,32 @@ ADD_CHARACTER miku CENTER
 [miku]
 "Fufu...
 I keep loking at it"
-[miku]
+[miku:calm]
 "The cup that Hibiki gave me."
 REMOVE_CHRACTER miku
 ADD_CHARACTER shirabe CENTER
-[shirabe]
+[shirabe:calm]
 "Nnn....Are you also awake, Miku-san?"
 REMOVE_CHRACTER shirabe
 ADD_CHARACTER miku LEFT
 ADD_CHARACTER shirabe RIGHT
-[miku]
+[miku:surprised]
 "Shriabe-chan."
-[miku]
+[miku:sad]
 "I'm sorry, did I wake you up?"
 [shirabe]
 "No, to be honest, I was awake since earlier.
 When I thought it was quiet, I heard your voice."
-[miku]
+[miku:blush]
 "Did you hear me?
 It's a bit shameful...."
-[miku]
+[miku:calm]
 "I'm was so happy that everyone one celebrated my birthday
 that maybe I'm still feeling a little flustered."
 [shirabe]
 "Everyone was so excited.....
 They fell completely asleep."
-[shirabe]
+[shirabe:happy]
 "Kiri-chan is sleeping too."
 [miku]
 "Maybe should I change to my pajamas,
@@ -45,48 +46,188 @@ but I don't want to wake anybody."
 REMOVE_CHRACTER miku
 REMOVE_CHRACTER shirabe
 ADD_CHARACTER miku CENTER
-[miku]
+[miku:happy]
 "....Everyone is sleeping with such happy face."
-[miku]
+[miku:calm]
 "The last time, and many times before,
 It's hard to believe that so many things have happened."
 REMOVE_CHRACTER miku
 ADD_CHARACTER shirabe CENTER
-[shirabe]
+[shirabe:sad]
 "Many things had happened, don't you think?"
 REMOVE_CHRACTER shirabe
-ADD_CHARACTER miku
-[miku]
+ADD_CHARACTER miku CENTER
+[miku:sad]
 "....Yes"
-[miku]
+[miku:calm]
 "Maybe it was more than necessary. Today, the
 present that everybody gave me..."
-[miku]
+[miku:happy]
 "It made so happy to the point I was about to cry."
 REMOVE_CHRACTER miku
 ADD_CHARACTER shirabe RIGHT
 ADD_CHARACTER miku LEFT
-[shirabe]
+[shirabe:calm]
 "We all agreed to make this a memorable day..."
-[miku]
+[miku:calm]
 "Ujum,
 that's why, you gave me a 'present without a shape', right?"
-[shirabe]
+[shirabe:sad]
 "But actually, you would have liked
 a physical gift, right?"
-[miku]
+[miku:surprised]
 "Ahh, no, it's not that.
 I didn't mean to say such."
 [shirabe]
 "But that cup...."
-[miku]
+[miku:calm]
 "Hibiki gave me this the other day, so...
 Fufu, I don't really have any other intention."
-[miku]
+[miku:happy]
 "It's a special cup, so I shall used it in special ocations,
 I thought, I was thinking about many things."
-[shirabe]
+[shirabe:happy]
 "It's important to you, right?"
-[miku]
+[miku:calm]
 "Ujum. That's why on a day like this,
 when I'm happy, when I'm having fun...."
+[miku:sad]
+"I don't want to fight as much as possible...
+so I don't know what to do."
+[shirabe:happy]
+"Then, what about when you reconciliate?"
+[miku:happy]
+"I think that's really wonderful!"
+REMOVE_CHRACTER shirabe
+REMOVE_CHRACTER miku
+["Tachibana Hibiki"]
+"Ummm.... Mnyaa, Mnyaa..."
+ADD_CHARACTER miku LEFT
+ADD_CHARACTER shirabe RIGHT
+["Kohinata Miku & Shirabe Tsukuyomi"]
+"Shhhh!"
+%TODO ADD SWIPE
+REMOVE_CHRACTER miku
+REMOVE_CHRACTER shirabe
+["Kohinata Miku & Shirabe Tsukuyomi"]
+"....."
+ADD_CHARACTER miku LEFT
+ADD_CHARACTER shirabe RIGHT
+["Kohinata Miku & Shirabe Tsukuyomi"]
+"Fufufu"
+REMOVE_CHRACTER miku
+REMOVE_CHRACTER shirabe
+ADD_CHARACTER shirabe center
+[shirabe:calm]
+"....Sometimes I think"
+[shirabe:sad]
+"....that because you are really kind,
+you forgive too many of our mistakes."
+[shirabe]
+"You don't let us apologize when we want to apologize.
+It's a bit unfair."
+REMOVE_CHRACTER shirabe
+ADD_CHARACTER miku CENTER
+[miku:surprised]
+"Ehhh...."
+[miku:calm]
+"...I see."
+REMOVE_CHRACTER miku
+ADD_CHARACTER shirabe RIGHT
+ADD_CHARACTER miku LEFT
+[shirabe:calm]
+"I'm talking about that."
+[miku]
+"....Fufu"
+[miku]
+"Well then, I'll also keep this memory as precious."
+[shirabe:angry]
+"As a fight one...?"
+[miku:calm]
+"I don't think we got to the point of fighting.
+It's a precious scolding that Shirabe-chan gave me."
+[miku:happy]
+"Right?"
+[shirabe:sad]
+"Uhhh...."
+REMOVE_CHRACTER shirabe
+REMOVE_CHRACTER miku
+ADD_CHARACTER miku CENTER
+[miku:calm]
+"I'm sure that this,
+will become a precious memory that supports me."
+[miku:happy]
+"I'll like to put these memories in this cup,
+one by one until it overflows with them."
+REMOVE_CHRACTER miku
+ADD_CHARACTER shirabe CENTER
+[shirabe:calm]
+"...."
+[shirabe]
+"Then...Why not use it now?"
+[shirabe:happy]
+"I'm going to prepare something hot."
+FADE_OUT BLACK
+REMOVE_CHRACTER shirabe
+ADD_BACKGROUND "Images/SP0680.png"
+MOVE_CAMERA -100 100 1.5
+["Shirabe Tsukuyomi"]
+"Here, take this.
+It's my special hot cocoa."
+["Shirabe Tsukuyomi"]
+"This also count as a gift, if somebody find out,
+I might be accused of giving you a gift, so...It's a secret, okay?"
+["Kohinata Miku"]
+"I-I don't think that'll happen..."
+["Shirabe Tsukuyomi"]
+"...If Hibiki-san find out, would you be able to 
+tell her that's not the case?"
+MOVE_CAMERA -10 110 1.5
+["Kohinata Miku"]
+"I'm...
+I'm not sure."
+["Shirabe Tsukuyomi"]
+"Well...true.
+I think it's okay."
+["Shirabe Tsukuyomi"]
+"If you drink it,
+this also will become a present without a shape."
+MOVE_CAMERA CENTER CENTER 1.2
+["Kohinata Miku"]
+"Fufu thank you."
+["Shirabe Tsukuyomi"]
+"One more time before we go to sleep.
+Happy birthday, Miku-san."
+FADE_OUT BLACK
+MOVE_CAMERA RESTORE
+ADD_BACKGROUND "Images/bg3001_03_02.png"
+ADD_CHARACTER shirabe CENTER
+[shirabe:calm]
+"I'm happy that...ammm..."
+[shirabe:blush]
+"that Miku-san is here."
+REMOVE_CHRACTER shirabe
+ADD_CHARACTER miku CENTER
+[miku]
+"Me too. I'm really happy to be here,
+where everyone is."
+[miku]
+"Today, day after tomorrow, and after that."
+[miku:angry]
+"To protect this place...where everyone is,
+I want to do my best tomorrow too."
+REMOVE_CHRACTER miku
+ADD_CHARACTER shirabe CENTER
+[shirabe:calm]
+"Miku-san...."
+[shirabe:happy]
+"Let's do our best together."
+REMOVE_CHRACTER shirabe
+ADD_CHARACTER miku
+[miku:calm]
+"Ujum.
+Thank you."
+[miku:happy]
+"Really, it was a happy day!"
+REMOVE_CHRACTER miku
+FADE_OUT BLACK

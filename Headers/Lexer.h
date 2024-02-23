@@ -10,7 +10,10 @@ typedef enum {
     TOKEN_STRING_LITERAL,    
     TOKEN_EQUALS,
     TOKEN_NUMBER,
-    TOKEN_COMMENT  
+    TOKEN_COMMENT,
+    TOKEN_COLON,
+    TOKEN_OPEN_SQRBRACKET,
+    TOKEN_CLOSE_SQRBRACKET 
 } Token_Kind;
 
 typedef struct {
@@ -33,7 +36,7 @@ class Lexer{
         size_t line;
         void chop_char(size_t len);
         bool is_symbol_start(char x);
-        bool is_symbol(char x);
+        bool is_symbol(char x);        
         bool is_eof();
         char current_character();        
 };
