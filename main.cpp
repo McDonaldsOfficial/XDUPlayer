@@ -34,23 +34,3 @@ int main(){
     CloseWindow();
     return 0;
 }
-
-int main2(){
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Player");        
-    SetTargetFPS(24);
-    Font font = LoadFont("resources/fonts/mecha.png");
-    const int posX = 0;
-    const int posY = 0;
-    const int outlineSize = 1;
-    const int fontSize = 50;
-
-    while(!WindowShouldClose()){        
-        BeginDrawing();
-        ClearBackground(GRAY);
-            
-        EndDrawing();    
-    }
-    
-    CloseWindow();
-    return 0;
-}
