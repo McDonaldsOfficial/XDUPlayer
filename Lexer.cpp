@@ -111,21 +111,6 @@ Token Lexer::next(){
         token.kind = TOKEN_SYMBOL;
         return token;
     }
-    // if( this->current_character() == '[' ){
-    //     token.kind = TOKEN_NAME_CHARA;
-        
-    //     this->chop_char();
-    //     while(!this->is_eof() && (this->current_character() != ']')){
-    //         this->chop_char();
-    //         len += 1;
-    //     }
-    //     if(!this->is_eof()){
-    //         len += 1;
-    //         this->chop_char();
-    //     }
-    //     token.text = this->content.substr(start + 1,len - 1);
-    //     return token;
-    // }
     if(this->current_character() == '"'){
         token.kind = TOKEN_STRING_LITERAL;
         

@@ -26,6 +26,10 @@ typedef struct{
     std::string current_dialog;
     std::string full_dialog;
     int dialog_chara_counter = 0;
+
+    //Sound
+    Music background_music;
+    Sound character_noise;
 } Render;
 
 struct Character {
@@ -51,6 +55,7 @@ struct CharaScreen {
 struct CameraParams {
     Vector2 camera_target;
     float zoom;
+    float seconds;
 };
 
 struct Timer{
@@ -71,8 +76,10 @@ class Renderer{
         ScreenAnimations screen_animations;
         Timer timer = {.life_time = 0};
         int ofset;
+        int outline_size = 1;
         float next_icon_pos_y;
         Animator animator;        
+        Font font =  LoadFont("resources/fonts/alpha_beta.png");
         std::map<std::string, Character> variable_map;
         std::map<std::string, CharaScreen> character_on_screen;        
         Color visible_chara = {.r = 255, .g = 255, .b = 255, .a = 255};
@@ -86,6 +93,7 @@ class Renderer{
         Vector2 dialogue_text_pos;
         Vector2 screen_center;
         bool is_paused = false;
+        std::string prev_character_name_dialogue;   
         //Functions
         Texture2D load_texture(std::string path);
         void add_dialogue();
@@ -102,16 +110,17 @@ class Renderer{
         void chara_dialogue();
         void fade_in(std::string key);
         bool fade_out(std::string key);        
-        
+        void play_music();
+        void play_sound(); //Just in case
         bool are_the_same_color(Color color1, Color color2);
         bool timer_done();
         void update_timer();
         void start_timer(float life_time);
         void color_to_color(std::string key);
         void draw_background();
-        void FadeScreen();        
+        void FadeScreen();       
+        void write_outline(); 
         Color string_to_color(std::string color);
         Token validate_token(Token_Kind kind, std::string message);
-        std::string prev_character_name_dialogue;   
         std::string get_sprite_number(std::string name);     
 };

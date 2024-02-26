@@ -41,6 +41,12 @@ Renderer::~Renderer(){
         if(val.texture.id > 0)
             UnloadTexture(val.texture);
     }
+    if(render.background_music.frameCount > 0){
+        UnloadMusicStream(render.background_music);
+    }
+    if(render.character_noise.frameCount > 0){
+        UnloadSound(render.character_noise);
+    }
 }
 
 std::string Renderer::get_sprite_number(std::string name){
@@ -68,16 +74,32 @@ Texture2D Renderer::load_texture(std::string path){
     return texture;
 }
 
+void Renderer::write_outline(){
+    DrawTextEx(this->font,this->render.current_name.c_str(), (Vector2){this->name_text_pos.x - this->outline_size, this->name_text_pos.y - this->outline_size}, 27, 3,BLACK);
+    DrawTextEx(this->font,this->render.current_name.c_str(), (Vector2){this->name_text_pos.x + this->outline_size, this->name_text_pos.y - this->outline_size}, 27, 3,BLACK);
+    DrawTextEx(this->font,this->render.current_name.c_str(), (Vector2){this->name_text_pos.x - this->outline_size, this->name_text_pos.y + this->outline_size}, 27, 3,BLACK);
+    DrawTextEx(this->font,this->render.current_name.c_str(), (Vector2){this->name_text_pos.x + this->outline_size, this->name_text_pos.y + this->outline_size}, 27, 3,BLACK);
+    DrawTextEx(this->font,this->render.current_name.c_str(), (Vector2){this->name_text_pos.x, this->name_text_pos.y}, 27,3, WHITE);
+
+    DrawText(this->render.current_dialog.c_str(), this->dialoge_text_pos.x - this->outline_size, this->dialoge_text_pos.y - this->outline_size, 35, BLACK);
+    DrawText(this->render.current_dialog.c_str(), this->dialoge_text_pos.x + this->outline_size, this->dialoge_text_pos.y - this->outline_size, 35, BLACK);
+    DrawText(this->render.current_dialog.c_str(), this->dialoge_text_pos.x - this->outline_size, this->dialoge_text_pos.y + this->outline_size, 35, BLACK);
+    DrawText(this->render.current_dialog.c_str(), this->dialoge_text_pos.x + this->outline_size, this->dialoge_text_pos.y + this->outline_size, 35, BLACK);
+    DrawText(this->render.current_dialog.c_str(), this->dialoge_text_pos.x, this->dialoge_text_pos.y, 35, WHITE);
+}
+
 void Renderer::write_to_screen(){
     if(this->render.current_name.empty()){
         return;        
-    }  
-    DrawText(this->render.current_name.c_str(), name_text_pos.x, name_text_pos.y, 30, LIGHTGRAY);    
+    }
+    
+    //DrawText(this->render.current_name.c_str(), name_text_pos.x, name_text_pos.y, 30, LIGHTGRAY);    
     if(this->render.current_dialog.length() < this->render.full_dialog.length()){
         this->render.current_dialog.push_back(this->render.full_dialog[this->render.dialog_chara_counter]);
         this->render.dialog_chara_counter++;
     }
-    DrawText(this->render.current_dialog.c_str(), dialogue_text_pos.x, dialogue_text_pos.y, 27, LIGHTGRAY);  
+    this->write_outline();
+    //DrawText(this->render.current_dialog.c_str(), dialogue_text_pos.x, dialogue_text_pos.y, 27, LIGHTGRAY);      
 }
 
 void Renderer::fade_in(std::string key){
@@ -111,38 +133,6 @@ void Renderer::color_to_color(std::string key){
     float b = c.from_color.b + (c.dest_color.b - c.from_color.b) * GetFrameTime() * GetFPS() / animation_rate ;
     float a = c.from_color.a + (c.dest_color.a - c.from_color.a) * GetFrameTime() * GetFPS() / animation_rate ;
     this->character_on_screen[key].from_color = (Color){r,g,b,a};
-    // if( c.from_color.r < c.dest_color.r ){
-    //     if(c.from_color.r + animation_rate > c.dest_color.r) this->character_on_screen[key].from_color.r = c.dest_color.r;
-    //     else this->character_on_screen[key].from_color.r += animation_rate;    
-    // }
-    // if( c.from_color.g < c.dest_color.g ){
-    //     if(c.from_color.g + animation_rate > c.dest_color.g) this->character_on_screen[key].from_color.g = c.dest_color.g;
-    //     else this->character_on_screen[key].from_color.g += animation_rate;    
-    // }
-    // if( c.from_color.b < c.dest_color.b ){
-    //     if(c.from_color.b + animation_rate > c.dest_color.b) this->character_on_screen[key].from_color.b = c.dest_color.b;
-    //     else this->character_on_screen[key].from_color.b += animation_rate;    
-    // }
-    // if( c.from_color.a < c.dest_color.a ){
-    //     if(c.from_color.a + animation_rate > c.dest_color.a) this->character_on_screen[key].from_color.a = c.dest_color.a;
-    //     else this->character_on_screen[key].from_color.a += animation_rate;    
-    // }
-    // if( c.from_color.r > c.dest_color.r ){
-    //     if(c.from_color.r - animation_rate < c.dest_color.r) this->character_on_screen[key].from_color.r = c.dest_color.r;
-    //     else this->character_on_screen[key].from_color.r -= animation_rate;    
-    // }
-    // if( c.from_color.g > c.dest_color.g ){
-    //     if(c.from_color.g - animation_rate < c.dest_color.g) this->character_on_screen[key].from_color.g = c.dest_color.g;
-    //     else this->character_on_screen[key].from_color.g -= animation_rate;    
-    // }
-    // if( c.from_color.b > c.dest_color.b ){
-    //     if(c.from_color.b - animation_rate < c.dest_color.b) this->character_on_screen[key].from_color.b = c.dest_color.b;
-    //     else this->character_on_screen[key].from_color.b -= animation_rate;    
-    // }
-    // if( c.from_color.a > c.dest_color.a ){
-    //     if(c.from_color.a - animation_rate < c.dest_color.a) this->character_on_screen[key].from_color.a = c.dest_color.a;
-    //     else this->character_on_screen[key].from_color.a -= animation_rate;    
-    // }
 }
 
 bool Renderer::are_the_same_color(Color color1, Color color2){
@@ -164,42 +154,9 @@ void Renderer::FadeScreen(){
 
     this->screen_animations.origin_color = (Color){r,g,b,a};
 
-    // if( this->screen_animations.origin_color.r < this->screen_animations.dest_color.r ){
-    //     if(this->screen_animations.origin_color.r + animation_rate > this->screen_animations.dest_color.r) this->screen_animations.origin_color.r = this->screen_animations.dest_color.r;
-    //     else this->screen_animations.origin_color.r += animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.g < this->screen_animations.dest_color.g ){
-    //     if(this->screen_animations.origin_color.g + animation_rate > this->screen_animations.dest_color.g) this->screen_animations.origin_color.g = this->screen_animations.dest_color.g;
-    //     else this->screen_animations.origin_color.g += animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.b < this->screen_animations.dest_color.b ){
-    //     if(this->screen_animations.origin_color.b + animation_rate > this->screen_animations.dest_color.b) this->screen_animations.origin_color.b = this->screen_animations.dest_color.b;
-    //     else this->screen_animations.origin_color.b += animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.a < this->screen_animations.dest_color.a ){
-    //     if(this->screen_animations.origin_color.a + animation_rate > this->screen_animations.dest_color.a) this->screen_animations.origin_color.a = this->screen_animations.dest_color.a;
-    //     else this->screen_animations.origin_color.a += animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.r > this->screen_animations.dest_color.r ){
-    //     if(this->screen_animations.origin_color.r - animation_rate < this->screen_animations.dest_color.r) this->screen_animations.origin_color.r = this->screen_animations.dest_color.r;
-    //     else this->screen_animations.origin_color.r -= animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.g > this->screen_animations.dest_color.g ){
-    //     if(this->screen_animations.origin_color.g - animation_rate < this->screen_animations.dest_color.g) this->screen_animations.origin_color.g = this->screen_animations.dest_color.g;
-    //     else this->screen_animations.origin_color.g -= animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.b > this->screen_animations.dest_color.b ){
-    //     if(this->screen_animations.origin_color.b - animation_rate < this->screen_animations.dest_color.b) this->screen_animations.origin_color.b = this->screen_animations.dest_color.b;
-    //     else this->screen_animations.origin_color.b -= animation_rate;    
-    // }
-    // if( this->screen_animations.origin_color.a > this->screen_animations.dest_color.a ){
-    //     if(this->screen_animations.origin_color.a - animation_rate < this->screen_animations.dest_color.a) this->screen_animations.origin_color.a = this->screen_animations.dest_color.a;
-    //     else this->screen_animations.origin_color.a -= animation_rate;    
-    // }
 }
 
 void Renderer::draw_screen(){
-    //DrawTexturePro(render.textbar, src_textbar, dst_textbar, (Vector2){0, 0}, 0, WHITE);
     
     for(auto const &[key, val] : this->character_on_screen){
         if(val.texture.id <= 0)
@@ -208,7 +165,7 @@ void Renderer::draw_screen(){
             this->fade_in(key);
         }        
         if(val.animation == FADE_OUT){
-            if(this->fade_out(key)) continue;
+            if(this->fade_out(key)) break;
         }        
         if(!this->are_the_same_color(val.from_color, val.dest_color)){
             this->color_to_color(key);
@@ -342,6 +299,7 @@ void Renderer::move_camera(){
     if(t.text == "RESTORE"){
         this->cam_param.camera_target = this->screen_center;
         this->cam_param.zoom = 1;
+        this->cam_param.seconds = 0.5;
         return;
     }
     float x,y, zoom;
@@ -359,8 +317,11 @@ void Renderer::move_camera(){
     }else y = std::stof(t.text);
     t = this->validate_token(TOKEN_NUMBER, "El zoom debe de ser un valor númerico");    
     zoom = std::stof(t.text);
+    t = this->validate_token(TOKEN_NUMBER, "Debe de haber una duración");    
+    float time = std::stof(t.text);
     this->cam_param.zoom = zoom;
     this->cam_param.camera_target = {.x = x, .y = y};
+    this->cam_param.seconds = time;
 }
 
 Color Renderer::string_to_color(std::string color){
@@ -382,13 +343,13 @@ void Renderer::fade_screen(bool fade_out){
     if(fade_out){
         //Fade from image into color
         this->screen_animations.type = FADE_OUT;
-        this->screen_animations.origin_color = c;
-        this->screen_animations.dest_color = {c.r,c.g,c.b,0 };    
+        this->screen_animations.origin_color = {c.r,c.g,c.b,255 };
+        this->screen_animations.dest_color = {c.r,c.g,c.b,0};    
         return;
     }
     this->screen_animations.type = FADE_OUT;
-    this->screen_animations.origin_color = {c.r,c.g,c.b,0 };    
-    this->screen_animations.dest_color = c;
+    this->screen_animations.origin_color = {c.r,c.g,c.b,0} ;    
+    this->screen_animations.dest_color = {c.r,c.g,c.b,255 };
     
 }
 
@@ -449,6 +410,20 @@ void Renderer::chara_dialogue(){
     
 }
 
+void Renderer::play_music(){
+    Token t = this->validate_token(TOKEN_STRING_LITERAL, "Debe de específicar la dirección del archivo de sonido");
+    std::string path = t.text;
+    if(this->render.background_music.frameCount > 0){
+        UnloadMusicStream(this->render.background_music);
+    }
+    Music music = LoadMusicStream(path.c_str());
+    music.looping = true;
+    this->render.background_music = music;
+    PlayMusicStream(music);
+    
+    
+}
+
 void Renderer::parse_instruction(){
     if(!this->timer_done()){
         return;
@@ -477,6 +452,8 @@ void Renderer::parse_instruction(){
             this->add_character();
         }else if( t.text.compare("REMOVE_CHRACTER") == 0 ){
             this->remove_character();
+        }else if( t.text.compare("PLAY_BACKGROUND") == 0 ){
+            this->play_music();
         }
         
         t = this->lexer.next();
@@ -497,6 +474,8 @@ void Renderer::draw_background(){
 }
 
 void Renderer::render_update(){
+    if(this->render.background_music.frameCount > 0)
+            UpdateMusicStream(this->render.background_music);
     BeginDrawing();
         ClearBackground(WHITE);
         if(this->is_paused){
@@ -509,9 +488,10 @@ void Renderer::render_update(){
         if(this->render.background.id > 0){
             BeginMode2D(this->camera);
             this->draw_background();
-            this->animator.MoveCamera(this->cam_param.camera_target, this->cam_param.zoom, 0);
+            this->animator.MoveCamera(this->cam_param.camera_target, this->cam_param.zoom, this->cam_param.seconds);
             EndMode2D();
         }
+        
         this->update_timer();
         this->draw_screen();        
     EndDrawing();
